@@ -1,5 +1,6 @@
-GameWrapper.o: \
- /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/source/GameWrapper.cpp \
+MapData.o: \
+ /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/source/MapData.cpp \
+ /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/MapData.h \
  /opt/devkitpro/libnds/include/nds.h \
  /opt/devkitpro/calico/include/calico.h \
  /opt/devkitpro/calico/include/calico/types.h \
@@ -112,11 +113,8 @@ GameWrapper.o: \
  /opt/devkitpro/libnds/include/nds/arm9/sprite.h \
  /opt/devkitpro/libnds/include/nds/arm9/trig_lut.h \
  /opt/devkitpro/libnds/include/nds/arm9/video.h \
- /opt/devkitpro/libnds/include/nds/arm9/videoGL.h \
- /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/GameWrapper.h \
- /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Tiles.h \
- /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Map.h \
- /home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Utils.h
+ /opt/devkitpro/libnds/include/nds/arm9/videoGL.h
+/home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/MapData.h:
 /opt/devkitpro/libnds/include/nds.h:
 /opt/devkitpro/calico/include/calico.h:
 /opt/devkitpro/calico/include/calico/types.h:
@@ -230,7 +228,3 @@ GameWrapper.o: \
 /opt/devkitpro/libnds/include/nds/arm9/trig_lut.h:
 /opt/devkitpro/libnds/include/nds/arm9/video.h:
 /opt/devkitpro/libnds/include/nds/arm9/videoGL.h:
-/home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/GameWrapper.h:
-/home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Tiles.h:
-/home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Map.h:
-/home/mferraz/Documents/DEV/PERSONAL/Games/Nintendo/NDS/the-great-escape/include/Utils.h:
