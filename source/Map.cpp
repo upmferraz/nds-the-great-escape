@@ -2,13 +2,17 @@
 #include "MapData.h"
 #include "Utils.h"
 
+// VALORES SINTONIZADOS
+#define MAP_OFFSET 3240
+#define MAP_WIDTH  54   
+
 Map::Map() {
-    // Valores que tu descobriste que alinham as casas:
-    mapOffset = 4060; 
-    mapWidth = 54;    
+    mapOffset = MAP_OFFSET;
+    mapWidth = MAP_WIDTH;
 }
 
 const u8* getTileData(u8 index) {
+    // Seleciona o banco de gráficos correto
     if (index < 45) {
         if (index * 8 < exterior_tiles_1_size) return &exterior_tiles_1[index * 8];
     }
@@ -31,20 +35,28 @@ void Map::drawTile8x8(u16* buffer, int screenX, int screenY, u8 tileIndex) {
     for (int y = 0; y < 8; y++) {
         int py = screenY + y;
         if (py < 0 || py >= 192) continue;
+
         u8 row = tileData[y];
         for (int x = 0; x < 8; x++) {
             int px = screenX + x;
             if (px < 0 || px >= 256) continue;
-            if ((row >> (7 - x)) & 1) buffer[px + py * 256] = CLR_WHITE;
+            
+            // Desenha pixel branco (tinta)
+            if ((row >> (7 - x)) & 1) {
+                buffer[px + py * 256] = CLR_WHITE;
+            }
         }
     }
 }
 
 void Map::drawSuperTile(u16* buffer, int screenX, int screenY, u8 superTileIndex) {
-    // Filtro de Ruído Suave: Ignora tiles com índices muito altos (lixo de memória)
-    if (superTileIndex > 250) return; 
+    // Filtra o chão (255) para não desenhar nada (transparente/preto)
+    // Se quiseres ver o chão a cinzento para debug, podes descomentar o código do passo anterior
+    if (superTileIndex == 0xFF) return; 
 
+    // Proteção de limites
     if (superTileIndex * 16 >= super_tiles_raw_size) return;
+
     const u8* defs = &super_tiles_raw[superTileIndex * 16];
 
     for (int ty = 0; ty < 4; ty++) {
@@ -56,6 +68,7 @@ void Map::drawSuperTile(u16* buffer, int screenX, int screenY, u8 superTileIndex
 }
 
 void Map::draw(u16* buffer, int camX, int camY) {
+    // Desenha uma área ligeiramente maior que o ecrã para evitar "pop-in"
     for (int y = 0; y < 8; y++) { 
         for (int x = 0; x < 9; x++) { 
             int sx = (x * 32) - (camX % 32);
@@ -64,7 +77,9 @@ void Map::draw(u16* buffer, int camX, int camY) {
             int worldSTX = (camX / 32) + x;
             int worldSTY = (camY / 32) + y;
 
-            // Usa as variáveis da classe (ajustáveis)
+            // Usa a largura sintonizada (54)
+            if (worldSTX < 0 || worldSTX >= this->mapWidth) continue;
+
             int layoutIndex = this->mapOffset + worldSTX + (worldSTY * this->mapWidth);
             
             if (layoutIndex >= 0 && layoutIndex < super_tiles_raw_size) {
