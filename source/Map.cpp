@@ -2,12 +2,10 @@
 #include "MapData.h"
 #include "Utils.h"
 
-// Valores descobertos por ti
-#define MAP_OFFSET 4060
-#define MAP_WIDTH  54
-
 Map::Map() {
-    // Não precisamos de inicializar nada dinâmico agora
+    // Valores que tu descobriste que alinham as casas:
+    mapOffset = 4060; 
+    mapWidth = 54;    
 }
 
 const u8* getTileData(u8 index) {
@@ -33,24 +31,20 @@ void Map::drawTile8x8(u16* buffer, int screenX, int screenY, u8 tileIndex) {
     for (int y = 0; y < 8; y++) {
         int py = screenY + y;
         if (py < 0 || py >= 192) continue;
-
         u8 row = tileData[y];
         for (int x = 0; x < 8; x++) {
             int px = screenX + x;
             if (px < 0 || px >= 256) continue;
-            
-            // Desenha o pixel do tile (Branco)
-            if ((row >> (7 - x)) & 1) {
-                buffer[px + py * 256] = CLR_WHITE;
-            }
+            if ((row >> (7 - x)) & 1) buffer[px + py * 256] = CLR_WHITE;
         }
     }
 }
 
 void Map::drawSuperTile(u16* buffer, int screenX, int screenY, u8 superTileIndex) {
-    // Proteção básica para não ler fora da RAM
-    if (superTileIndex * 16 >= super_tiles_raw_size) return;
+    // Filtro de Ruído Suave: Ignora tiles com índices muito altos (lixo de memória)
+    if (superTileIndex > 250) return; 
 
+    if (superTileIndex * 16 >= super_tiles_raw_size) return;
     const u8* defs = &super_tiles_raw[superTileIndex * 16];
 
     for (int ty = 0; ty < 4; ty++) {
@@ -62,18 +56,16 @@ void Map::drawSuperTile(u16* buffer, int screenX, int screenY, u8 superTileIndex
 }
 
 void Map::draw(u16* buffer, int camX, int camY) {
-    // Otimização: Desenhar apenas o necessário (9x7 SuperTiles cobrem o ecrã da DS)
-    for (int y = 0; y < 7; y++) {
-        for (int x = 0; x < 9; x++) {
+    for (int y = 0; y < 8; y++) { 
+        for (int x = 0; x < 9; x++) { 
             int sx = (x * 32) - (camX % 32);
             int sy = (y * 32) - (camY % 32);
             
-            // Coordenada no mundo (em supertiles)
             int worldSTX = (camX / 32) + x;
             int worldSTY = (camY / 32) + y;
 
-            // Fórmula Final com os teus valores
-            int layoutIndex = MAP_OFFSET + worldSTX + (worldSTY * MAP_WIDTH);
+            // Usa as variáveis da classe (ajustáveis)
+            int layoutIndex = this->mapOffset + worldSTX + (worldSTY * this->mapWidth);
             
             if (layoutIndex >= 0 && layoutIndex < super_tiles_raw_size) {
                 u8 stIndex = super_tiles_raw[layoutIndex];
